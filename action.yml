@@ -1,0 +1,23 @@
+name: "Scan open ports action"
+description: "Scan open tcp ports from hostname"
+author: 'Tristan Robert'
+branding:
+  icon: 'activity'  
+  color: 'green'
+inputs:
+  host:
+    description: 'The host to scan with nmap'
+    required: true
+  image:
+    description: 'Docker image to run nmap'
+    default: 'instrumentisto/nmap'
+  output:
+    description: 'Folder for scan reports'
+    default: 'output'
+  args:
+    description: 'nmap CLI args'
+    default: '-T4 -F'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+      
