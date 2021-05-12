@@ -12,6 +12,7 @@ describe("parse html report to json", () => {
     expect(data.nmaprun.host[0].ports[0].extraports[0].$.count).toEqual("993");
     expect(data.nmaprun.host[0].ports[0].port.length).toEqual(7);
     expect(data.nmaprun.host[0].ports[0].port[0].service[0].$.name).toEqual("ssh");
+    expect(data.nmaprun.host[0].ports[0].port[0].service[0].$.product).toEqual("OpenSSH");
     expect(data.nmaprun.host[0].ports[0].port[0].$.portid).toEqual("22");
     expect(data.nmaprun.host[0].ports[0].port[0].service[0].$.version).toEqual("6.6.1p1 Ubuntu 2ubuntu2.13");
     expect(data.nmaprun.host[0].ports[0].port[0].script[0].table[0].table.length).toEqual(3);
@@ -33,6 +34,7 @@ describe("parse html report to json", () => {
     expect(data.open_ports.length).toEqual(7);
     expect(data.open_ports[0].service.name).toEqual("ssh");
     expect(data.open_ports[0].service.id).toEqual("22");
+    expect(data.open_ports[0].service.product).toEqual("OpenSSH");
     expect(data.open_ports[0].service.version).toEqual("6.6.1p1 Ubuntu 2ubuntu2.13");
     expect(data.open_ports[0].service.vulnerabilities.length).toEqual(3);
     expect(data.open_ports[0].service.vulnerabilities[0].is_exploit).toEqual("false");
