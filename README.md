@@ -1,8 +1,8 @@
-# portscan-action
+# nmap-action
 
 Scan open ports and report results as JSON.
 
-[![units-test](https://github.com/MTES-MCT/portscan-action/actions/workflows/test.yml/badge.svg)](https://github.com/MTES-MCT/portscan-action/actions/workflows/test.yml)
+[![units-test](https://github.com/MTES-MCT/nmap-action/actions/workflows/test.yml/badge.svg)](https://github.com/MTES-MCT/nmap-action/actions/workflows/test.yml)
 
 Github action that scan open ports with [nmap](https://nmap.org) and report results as JSON.
 
@@ -13,7 +13,7 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: "MTES-MCT/portscan-action@main"
+      - uses: "MTES-MCT/nmap-action@main"
         with:
           host: scanme.nmap.org
           args: '-T4 -F'
