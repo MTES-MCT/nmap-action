@@ -16,12 +16,16 @@ jobs:
       - uses: "MTES-MCT/nmap-action@main"
         with:
           host: scanme.nmap.org
-          args: '-T4 -F'
-          output: 'scans'
+          outputDir: 'scans'
+          outputFile: 'nmapvuln.json'
+          raw: false
+          withVulnerabilities: true
 ```
 
-You can choose your nmap args cli except output format.
-You can choose directory output.
+You can choose your withVulnerabilities or not.
+You can choose directory output and file name.
+
+See [action.yml](action.yml) for details and default inputs.
 
 ## Hacking
 

@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v2
         if: ${{ env.ACT }}
         with:
-          path: "portscan-action"
+          path: "nmap-action"
       - name: Checkout Github
         uses: actions/checkout@v2
         if: ${{ !env.ACT }}
@@ -33,6 +33,10 @@ jobs:
         uses: ./
         with:
           host: scanme.nmap.org
+          raw: false
+          withVulnerabilities: true
+          outputDir: 'output'
+          outputFile: 'nmapvuln.json'
       - uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -40,7 +44,7 @@ jobs:
           path: 'output/'
       - name: test output
         run: |
-          tool=$(echo $(cat output/openports.json | jq '. | length'))
+          tool=$(echo $(cat output/nmapvuln.json | jq '. | length'))
           if [[ ! "${tool[@]}" == 1 ]]; then
             exit 1
           fi

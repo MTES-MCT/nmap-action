@@ -8162,7 +8162,27 @@ function copyFile(srcFile, destFile, force) {
 const xml2js = __nccwpck_require__(6189);
 const fs = __nccwpck_require__(5747);
 
-const transform = (json) => {
+const transform = (data, withVulnerabilities) => {
+  var json = {};
+  json['host'] = data.nmaprun.host[0].hostnames[0].hostname[0].$.name;
+  json['protocol'] = data.nmaprun.scaninfo[0].$.protocol;
+  json['closed_ports'] = data.nmaprun.host[0].ports[0].extraports[0].$.count;
+  json['open_ports'] = [];
+  var open_ports = data.nmaprun.host[0].ports[0].port;
+  open_ports.forEach((port) => {
+    var open_port = {};
+    open_port['service'] = {};
+    open_port['service']['name'] = port.service[0].$.name
+    open_port['service']['version'] = port.service[0].$.version
+    open_port['service']['vulnerabilities'] = [];
+    if (withVulnerabilities) {
+      var vulnerabilities = data.nmaprun.host[0].ports[0].port[0].script[0].table[0].table;
+      vulnerabilities.forEach((vulnerability) => {
+        open_port['service']['vulnerabilities'].push({ is_exploit: vulnerability.elem[0]._, cvss: vulnerability.elem[1]._, id: vulnerability.elem[2]._ });
+      });
+    }
+    json['open_ports'].push(open_port);
+  });
   return json;
 };
 
@@ -8173,11 +8193,11 @@ const transform = (json) => {
  *
  * @returns {Promise<string>}
  */
-const parse = (path) => {
-  console.warn(`Parse xml results from file ${path + '/report.xml'}`);
+const parse = (path, file, raw, withVulnerabilities) => {
+  console.warn(`Parse xml results from file ${path + '/' + file} to ${raw ? 'raw' : 'transformed'} json`);
   const parser = new xml2js.Parser();
-  const xmlData = fs.readFileSync(path + '/report.xml');
-  return parser.parseStringPromise(xmlData).then(transform);
+  const xmlData = fs.readFileSync(path + '/' + file);
+  return parser.parseStringPromise(xmlData).then((json) => !raw ? transform(json, withVulnerabilities) : json);
 };
 
 module.exports = parse;
@@ -8313,17 +8333,22 @@ async function run() {
     const workspace = process.env.GITHUB_WORKSPACE;
     const image = core.getInput('image');
     const host = core.getInput('host');
-    const output = core.getInput('output');
-    const args = core.getInput('args');
+    const outputDir = core.getInput('outputDir');
+    const outputFile = core.getInput('outputFile');
+    const raw = core.getInput('raw');
+    const withVulnerabilities = core.getInput('withVulnerabilities');
+    const args = withVulnerabilities ? '-sV --script vulners --script-args mincvss=5.0' : '-T4 -F';
 
-    const path = workspace + '/' + output;
+    const path = workspace + '/' + outputDir;
     await exec.exec(`mkdir -p ${path}`);
     await exec.exec(`docker pull ${image} -q`);
-    const nmap = (`docker run --user 0:0 -v ${path}:/data --network="host" -t ${image} ${args} --no-stylesheet -oX /data/report.xml ${host}`);
+    const oFileA = outputFile.split('.');
+    const xmlFile = oFileA && oFileA.length == 2 ? oFileA[0] + '.xml' : 'report';
+    const nmap = (`docker run --user 0:0 -v ${path}:/data --network="host" -t ${image} ${args} --no-stylesheet -oX ${'/data/' + xmlFile} ${host}`);
     try {
       await exec.exec(nmap);
-      const data = await parse(path);
-      fs.writeFileSync(`${output}/openports.json`, JSON.stringify(data));
+      const data = await parse(path, xmlFile, raw, withVulnerabilities);
+      fs.writeFileSync(`${outputDir}/${outputFile}`, JSON.stringify(data));
     } catch (error) {
       core.setFailed(error.message);
     }

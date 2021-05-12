@@ -11,12 +11,18 @@ inputs:
   image:
     description: 'Docker image to run nmap'
     default: 'instrumentisto/nmap'
-  output:
+  outputDir:
     description: 'Folder for scan reports'
     default: 'output'
-  args:
-    description: 'nmap CLI args'
-    default: '-T4 -F'
+  outputFile:
+    description: 'File name for scan reports'
+    default: 'nmap.json'
+  raw:
+    description: 'Raw or reduced JSON'
+    default: false
+  withVulnerabilities:
+    description: 'if true scan vulners NSE else open ports only'
+    default: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
