@@ -12,6 +12,7 @@ const transform = (data, withVulnerabilities) => {
     var open_port = {};
     open_port['service'] = {};
     open_port['service']['name'] = port.service[0].$.name
+    open_port['service']['id'] = port.$.portid
     open_port['service']['version'] = port.service[0].$.version
     open_port['service']['vulnerabilities'] = [];
     if (withVulnerabilities) {
