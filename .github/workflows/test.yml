@@ -46,6 +46,6 @@ jobs:
         run: |
           echo $(cat output/nmapvuln.json)
           tool=$(echo $(cat output/nmapvuln.json | jq '. | length'))
-          if [[ ! "${tool[@]}" == 1 ]]; then
+          if [[ ! "${tool[@]}" -gt 1 ]]; then
             exit 1
           fi
