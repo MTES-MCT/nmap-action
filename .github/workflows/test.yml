@@ -38,12 +38,13 @@ jobs:
           outputDir: 'output'
           outputFile: 'nmapvuln.json'
       - uses: actions/upload-artifact@v2
-        if: always()
         with:
-          name: nmap json report
-          path: 'output/'
+          path: nmapvuln.json
+          name: nmapvuln
+          if-no-files-found: error
       - name: test output
         run: |
+          echo $(cat output/nmapvuln.json)
           tool=$(echo $(cat output/nmapvuln.json | jq '. | length'))
           if [[ ! "${tool[@]}" == 1 ]]; then
             exit 1
