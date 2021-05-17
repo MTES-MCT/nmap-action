@@ -15,7 +15,7 @@
 <address addr="100.25.195.121" addrtype="ipv4"/>
 <hostnames>
 <hostname name="no-vulnerabilities.test.org" type="user"/>
-<hostname name="ec2-100-25-195-121.compute-1.amazonaws.com" type="PTR"/>
+<hostname name="no-vulnerabilities.test.org" type="PTR"/>
 </hostnames>
 <ports><extraports state="filtered" count="998">
 <extrareasons reason="no-responses" count="998"/>
