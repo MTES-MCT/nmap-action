@@ -39,7 +39,7 @@ jobs:
           outputFile: 'nmapvuln.json'
       - uses: actions/upload-artifact@v2
         with:
-          path: nmapvuln.json
+          path: output/nmapvuln.json
           name: nmapvuln
           if-no-files-found: error
       - name: test output
