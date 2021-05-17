@@ -1,10 +1,10 @@
 # nmap-action
 
-Scan open ports and report results as JSON.
+Scan open ports with vulnerabilities and report results as JSON.
 
 [![units-test](https://github.com/MTES-MCT/nmap-action/actions/workflows/test.yml/badge.svg)](https://github.com/MTES-MCT/nmap-action/actions/workflows/test.yml)
 
-Github action that scan open ports with [nmap](https://nmap.org) and report results as JSON.
+Github action that scan open ports with [nmap](https://nmap.org) and its [vulners script](https://nmap.org/nsedoc/scripts/vulners.html) and report results as JSON.
 
 ## Usage
 
