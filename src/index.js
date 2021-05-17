@@ -12,7 +12,7 @@ async function run() {
     const outputFile = core.getInput('outputFile');
     const raw = core.getInput('raw');
     const withVulnerabilities = core.getInput('withVulnerabilities');
-    const args = withVulnerabilities ? '-sV --script vulners --script-args mincvss=5.0' : '-T4 -F';
+    const args = withVulnerabilities == 'true' ? '-sV --script vulners --script-args mincvss=5.0' : '-T4 -F';
 
     const path = workspace + '/' + outputDir;
     await exec.exec(`mkdir -p ${path}`);
@@ -22,7 +22,7 @@ async function run() {
     const nmap = (`docker run --user 0:0 -v ${path}:/data --network="host" -t ${image} ${args} --no-stylesheet -oX ${'/data/' + xmlFile} ${host}`);
     try {
       await exec.exec(nmap);
-      const data = await parse(path, xmlFile, raw == 'true', withVulnerabilities);
+      const data = await parse(path, xmlFile, raw == 'true', withVulnerabilities == 'true');
       fs.writeFileSync(`${outputDir}/${outputFile}`, JSON.stringify(data));
     } catch (error) {
       core.setFailed(error.message);

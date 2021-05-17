@@ -17,9 +17,12 @@ const transform = (data, withVulnerabilities) => {
     open_port['service']['version'] = port.service[0].$.version
     open_port['service']['vulnerabilities'] = [];
     if (withVulnerabilities) {
-      var vulnerabilities = data.nmaprun.host[0].ports[0].port[0].script[0].table[0].table;
+      var vulnerabilities = [];
+      if (data.nmaprun.host[0].ports[0].port[0].script[0].table && data.nmaprun.host[0].ports[0].port[0].script[0].table.length > 0 && data.nmaprun.host[0].ports[0].port[0].script[0].table[0].table)
+        vulnerabilities =  data.nmaprun.host[0].ports[0].port[0].script[0].table[0].table;
       vulnerabilities.forEach((vulnerability) => {
-        open_port['service']['vulnerabilities'].push({ is_exploit: vulnerability.elem[0]._, cvss: vulnerability.elem[1]._, id: vulnerability.elem[2]._ });
+        if (vulnerability && vulnerability.elem && vulnerability.elem.length > 2)
+         open_port['service']['vulnerabilities'].push({ is_exploit: vulnerability.elem[0]._, cvss: vulnerability.elem[1]._, id: vulnerability.elem[2]._ });
       });
     }
     json['open_ports'].push(open_port);
