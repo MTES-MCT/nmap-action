@@ -40,6 +40,9 @@ describe("parse html report to json", () => {
     expect(data.open_ports[0].service.vulnerabilities[0].is_exploit).toEqual("false");
     expect(data.open_ports[0].service.vulnerabilities[0].cvss).toEqual("8.5");
     expect(data.open_ports[0].service.vulnerabilities[0].id).toEqual("CVE-2015-5600");
+    expect(data.open_ports[1].service.name).toEqual("smtp");
+    expect(data.open_ports[1].service.id).toEqual("25");
+    expect(data.open_ports[1].service.vulnerabilities.length).toEqual(0);
   });
 
   test("openports.xml raw should return raw json", async () => {
