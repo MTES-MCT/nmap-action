@@ -31,6 +31,7 @@ describe("parse html report to json", () => {
     expect(data.protocol).toEqual("tcp");
     expect(data.host).toEqual("scanme.nmap.org");
     expect(data.closed_ports).toEqual("993");
+    expect(data.grade).toEqual("C");
     expect(data.open_ports.length).toEqual(7);
     expect(data.open_ports[0].service.name).toEqual("ssh");
     expect(data.open_ports[0].service.id).toEqual("22");
@@ -67,13 +68,13 @@ describe("parse html report to json", () => {
     expect(data.open_ports[0].service.name).toEqual("ssh");
     expect(data.open_ports[0].service.id).toEqual("22");
   });
-
   test("no-vulnerabilities.xml not raw should return transformed json", async () => {
     const data = await parse(process.cwd()+'/src', 'no-vulnerabilities.xml', false, true);
     expect(data).not.toBeNull();
     expect(data.protocol).toEqual("tcp");
     expect(data.host).toEqual("no-vulnerabilities.test.org");
     expect(data.closed_ports).toEqual("998");
+    expect(data.grade).toEqual("A");
     expect(data.open_ports.length).toEqual(2);
     expect(data.open_ports[0].service.name).toEqual("http");
     expect(data.open_ports[0].service.id).toEqual("80");

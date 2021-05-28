@@ -9,14 +9,14 @@ inputs:
     description: 'The host to scan with nmap'
     required: true
   image:
-    description: 'Docker image to run nmap'
-    default: 'instrumentisto/nmap'
+    description: 'Docker image to run nmap with xsltproc'
+    default: 'tristanrobert/nmap-docker'
   outputDir:
     description: 'Folder for scan reports'
     default: 'output'
   outputFile:
     description: 'File name for scan reports'
-    default: 'nmap.json'
+    default: 'nmapvuln.json'
   raw:
     description: 'Raw or reduced JSON'
     default: false

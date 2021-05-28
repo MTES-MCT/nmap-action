@@ -8162,6 +8162,18 @@ function copyFile(srcFile, destFile, force) {
 const xml2js = __nccwpck_require__(6189);
 const fs = __nccwpck_require__(5747);
 
+const computeGrade = (json) => {
+  var grade = 'A';
+  if (json.open_ports.length > 2 && json.open_ports.filter(open_port => open_port.service.id == 80 || open_port.service.id == 443).length > 0) {
+    grade = 'B';
+  }
+  const totalVulnerabilities = json.open_ports.reduce(function(accumulator, open_port) {return accumulator + open_port.service.vulnerabilities.length;}, 0);
+  if (totalVulnerabilities > 0){
+    grade = totalVulnerabilities > 20 ? 'F' : totalVulnerabilities > 10 ? 'E' : totalVulnerabilities > 5 ? 'D' : 'C';
+  }
+  return grade;
+};
+
 const transform = (data, withVulnerabilities) => {
   var json = {};
   json['host'] = data.nmaprun.host[0].hostnames[0].hostname[0].$.name;
@@ -8191,6 +8203,7 @@ const transform = (data, withVulnerabilities) => {
     }
     json['open_ports'].push(open_port);
   });
+  json['grade'] = computeGrade(json);
   return json;
 };
 
@@ -8336,6 +8349,12 @@ const exec = __nccwpck_require__(1514);
 const parse = __nccwpck_require__(1809);
 const fs = __nccwpck_require__(5747);
 
+function getFilename(outputFile){
+  const oFileA = outputFile.split('.');
+  const filename = oFileA && oFileA.length == 2 ? oFileA[0] : 'nmapvuln';
+  return filename;
+}
+
 async function run() {
   try {
     const workspace = process.env.GITHUB_WORKSPACE;
@@ -8345,17 +8364,14 @@ async function run() {
     const outputFile = core.getInput('outputFile');
     const raw = core.getInput('raw');
     const withVulnerabilities = core.getInput('withVulnerabilities');
-    const args = withVulnerabilities == 'true' ? '-sV --script vulners --script-args mincvss=5.0' : '-T4 -F';
-
     const path = workspace + '/' + outputDir;
     await exec.exec(`mkdir -p ${path}`);
     await exec.exec(`docker pull ${image} -q`);
-    const oFileA = outputFile.split('.');
-    const xmlFile = oFileA && oFileA.length == 2 ? oFileA[0] + '.xml' : 'report';
-    const nmap = (`docker run --user 0:0 -v ${path}:/data --network="host" -t ${image} ${args} --no-stylesheet -oX ${'/data/' + xmlFile} ${host}`);
+    const filename = getFilename(outputFile);
+    const nmap = (`docker run --user 0:0 -v ${path}:/data --network="host" -t ${image} ${filename} ${host} ${withVulnerabilities}`);
     try {
       await exec.exec(nmap);
-      const data = await parse(path, xmlFile, raw == 'true', withVulnerabilities == 'true');
+      const data = await parse(path, `${filename}.xml`, raw == 'true', withVulnerabilities == 'true');
       fs.writeFileSync(`${outputDir}/${outputFile}`, JSON.stringify(data));
     } catch (error) {
       core.setFailed(error.message);
