@@ -33,5 +33,5 @@ To test locally, install [act](https://github.com/nektos/act).
 
 ```shell
 npm run all
-act -j test
+act -j units
 ```
