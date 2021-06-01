@@ -48,7 +48,6 @@ const transform = (data, withVulnerabilities) => {
     json['open_ports'].push(open_port);
   });
   json['grade'] = computeGrade(json);
-  console.info(`json=${JSON.stringify(json)}`);
   return json;
 };
 
