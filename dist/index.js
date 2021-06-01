@@ -8191,19 +8191,25 @@ const transform = (data, withVulnerabilities) => {
     open_port['service']['vulnerabilities'] = [];
     if (withVulnerabilities) {
       var vulnerabilities = [];
-      if (port.script && port.script[0].table && port.script[0].table.length > 0 && port.script[0].table[0].table)
-        vulnerabilities = port.script[0].table[0].table;
-      vulnerabilities.forEach((vulnerability) => {
-        if (vulnerability && vulnerability.elem && vulnerability.elem.length > 2) {
-          var vuln_elem = {};
-          vulnerability.elem.forEach((elem) => { vuln_elem[elem.$.key] = elem._; });
-          open_port['service']['vulnerabilities'].push(vuln_elem);
-        }
-      });
+      if (port.script) {
+         port.script.forEach((script) => {
+          if (script.table && script.table.length > 0 && script.table[0].table){
+            vulnerabilities = script.table[0].table;
+            vulnerabilities.forEach((vulnerability) => {
+              if (vulnerability && vulnerability.elem && vulnerability.elem.length > 2) {
+                var vuln_elem = {};
+                vulnerability.elem.forEach((elem) => { vuln_elem[elem.$.key] = elem._; });
+                open_port['service']['vulnerabilities'].push(vuln_elem);
+              }
+            });
+          }
+         });
+      }
     }
     json['open_ports'].push(open_port);
   });
   json['grade'] = computeGrade(json);
+  console.info(`json=${JSON.stringify(json)}`);
   return json;
 };
 

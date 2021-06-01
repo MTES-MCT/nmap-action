@@ -31,7 +31,7 @@ describe("parse html report to json", () => {
     expect(data.protocol).toEqual("tcp");
     expect(data.host).toEqual("scanme.nmap.org");
     expect(data.closed_ports).toEqual("993");
-    expect(data.grade).toEqual("C");
+    expect(data.grade).toEqual("F");
     expect(data.open_ports.length).toEqual(7);
     expect(data.open_ports[0].service.name).toEqual("ssh");
     expect(data.open_ports[0].service.id).toEqual("22");
@@ -80,6 +80,24 @@ describe("parse html report to json", () => {
     expect(data.open_ports[0].service.id).toEqual("80");
     expect(data.open_ports[0].service.product).toEqual("nginx");
     expect(data.open_ports[0].service.vulnerabilities.length).toEqual(0);
+  });
+
+  test("nmapvuln-subscript.xml not raw should return transformed json", async () => {
+    const data = await parse(process.cwd()+'/src', 'nmapvuln-subscript.xml', false, true);
+    expect(data).not.toBeNull();
+    expect(data.protocol).toEqual("tcp");
+    expect(data.host).toEqual("scanme.nmap.sub.org");
+    expect(data.closed_ports).toEqual("997");
+    expect(data.grade).toEqual("F");
+    expect(data.open_ports.length).toEqual(3);
+    expect(data.open_ports[1].service.name).toEqual("http");
+    expect(data.open_ports[1].service.id).toEqual("80");
+    expect(data.open_ports[1].service.product).toEqual("nginx");
+    expect(data.open_ports[1].service.version).toEqual("1.14.0");
+    expect(data.open_ports[1].service.vulnerabilities.length).toEqual(6);
+    expect(data.open_ports[1].service.vulnerabilities[0].is_exploit).toEqual("false");
+    expect(data.open_ports[1].service.vulnerabilities[0].cvss).toEqual("7.8");
+    expect(data.open_ports[1].service.vulnerabilities[0].id).toEqual("CVE-2019-9513");
   });
 
 });
