@@ -14,6 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: npm ci
+    - run: npm audit
     - run: npm test
 
   # test action works running from the graph
