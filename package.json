@@ -1,5 +1,5 @@
 {
-  "name": "portscan-action",
+  "name": "nmap-action",
   "version": "0.1.0",
   "description": "Scan open tcp ports and report results as JSON.",
   "main": "index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MTES-MCT/portscan-action.git"
+    "url": "git+https://github.com/MTES-MCT/nmap-action.git"
   },
   "keywords": [],
   "author": "Tristan Robert",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MTES-MCT/portscan-action/issues"
+    "url": "https://github.com/MTES-MCT/nmap-action/issues"
   },
-  "homepage": "https://github.com/MTES-MCT/portscan-action#readme",
+  "homepage": "https://github.com/MTES-MCT/nmap-action#readme",
   "dependencies": {
     "@actions/core": "^1.3.0",
     "@actions/exec": "^1.0.4",
