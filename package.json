@@ -22,7 +22,7 @@
   "homepage": "https://github.com/MTES-MCT/nmap-action#readme",
   "dependencies": {
     "@actions/core": "^1.3.0",
-    "@actions/exec": "^1.0.4",
+    "@actions/exec": "^1.1.1",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
